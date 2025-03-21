@@ -8,8 +8,30 @@
  * Learn more at https://developers.cloudflare.com/workers/
  */
 
+import {menus} from "./locations";
+
 export default {
-	async fetch(request, env, ctx) {
-		return new Response('Hello World!');
+	async fetch(request) {
+		const url = new URL(request.url);
+		const locationId = url.searchParams.get("location"); // Get locationId from query params
+
+		// Sample menu JSON mapped by locationId
+
+
+		const menuData = menus[Number(locationId)];
+
+		if (!locationId||!menus[Number(locationId)]) {
+			return new Response(
+				JSON.stringify({error: "Menu not found for this location"}),
+				{status: 404, headers: {"Content-Type": "application/json"}}
+			);
+		}
+
+		return new Response(JSON.stringify(menuData), {
+			headers: {
+				"Content-Type": "application/json",
+				"Access-Control-Allow-Origin": "*", // CORS support
+			},
+		});
 	},
 };
