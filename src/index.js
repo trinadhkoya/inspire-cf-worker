@@ -9,6 +9,7 @@
  */
 
 import {menus} from "./locations";
+import { featured } from './content_catalog';
 
 export default {
 	async fetch(request) {
@@ -16,7 +17,13 @@ export default {
 		const locationId = url.searchParams.get("location"); // Get locationId from query params
 
 		// Sample menu JSON mapped by locationId
-
+		if (url.pathname === "/featured") {
+			// Handle the new endpoint
+			return new Response(
+				JSON.stringify(featured),
+				{ status: 200, headers: { "Content-Type": "application/json" } }
+			);
+		}
 
 		const menuData = menus[Number(locationId)];
 
